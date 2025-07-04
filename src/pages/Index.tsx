@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -142,163 +141,142 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col">
-      {/* Compact Video Call Header */}
-      <header className="bg-gray-800 text-white px-4 py-2 flex items-center justify-between border-b border-gray-700">
-        <div className="flex items-center space-x-3">
-          <h1 className="text-sm font-medium">Technical Interview Session</h1>
-          <Badge variant="secondary" className="bg-red-600 text-white text-xs px-2 py-1">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Minimal Header with Video Participants */}
+      <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shadow-sm">
+        <div className="flex items-center space-x-4">
+          <h1 className="text-lg font-semibold text-gray-900">Technical Interview</h1>
+          <Badge variant="secondary" className="bg-red-100 text-red-800 text-xs">
             LIVE
           </Badge>
         </div>
-        <div className="flex items-center space-x-1">
-          <Button variant="ghost" size="sm" className="text-white hover:bg-gray-700 h-8 w-8 p-0">
-            <Settings className="w-3 h-3" />
-          </Button>
-          <Button variant="ghost" size="sm" className="text-white hover:bg-gray-700 h-8 w-8 p-0">
-            <MoreVertical className="w-3 h-3" />
-          </Button>
+        
+        {/* Participant Avatars */}
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+              aiSpeaking ? 'bg-blue-500 animate-pulse' : 'bg-gray-400'
+            }`}>
+              <Bot className={`w-4 h-4 ${aiSpeaking ? 'text-white' : 'text-white'}`} />
+            </div>
+            <span className="text-sm text-gray-600">AI Interviewer</span>
+            {aiSpeaking && (
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            )}
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+              <User className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-sm text-gray-600">You</span>
+          </div>
+
+          <div className="flex items-center space-x-1">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <Settings className="w-4 h-4" />
+            </Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <MoreVertical className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </header>
 
+      {/* Main Content */}
       <div className="flex-1 flex">
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col">
-          {/* Compact Video Grid */}
-          <div className="bg-gray-900 p-2 grid grid-cols-2 gap-2 h-32">
-            {/* AI Interviewer Video */}
-            <div className="relative bg-gray-800 rounded-lg overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                  aiSpeaking ? 'bg-blue-500 animate-pulse' : 'bg-gray-600'
-                }`}>
-                  <Bot className={`w-6 h-6 ${aiSpeaking ? 'text-white' : 'text-gray-300'}`} />
-                </div>
+        {/* Question Panel */}
+        <div className="w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto">
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <h3 className="text-xl font-semibold text-gray-900">{question.title}</h3>
+              <Badge className={getDifficultyColor(question.difficulty)}>
+                {question.difficulty}
+              </Badge>
+            </div>
+            
+            <div className="prose prose-sm max-w-none">
+              <p className="text-gray-700 leading-relaxed">{question.description}</p>
+              
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
+                <h4 className="font-medium text-gray-900 mb-2">Example:</h4>
+                <pre className="text-sm text-gray-700 whitespace-pre-wrap">{question.example}</pre>
               </div>
-              <div className="absolute bottom-1 left-1 bg-black bg-opacity-60 text-white px-1 py-0.5 rounded text-xs">
-                AI Interviewer
-              </div>
-              {aiSpeaking && (
-                <div className="absolute top-1 left-1 bg-green-500 text-white px-1 py-0.5 rounded-full text-xs">
-                  Speaking
-                </div>
-              )}
             </div>
 
-            {/* Candidate Video */}
-            <div className="relative bg-gray-800 rounded-lg overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center">
-                  <User className="w-6 h-6 text-gray-300" />
-                </div>
+            <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+              <div className="text-sm text-gray-500">
+                Question {currentQuestion + 1} of {interviewQuestions.length}
               </div>
-              <div className="absolute bottom-1 left-1 bg-black bg-opacity-60 text-white px-1 py-0.5 rounded text-xs">
-                You
-              </div>
-              {!videoEnabled && (
-                <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
-                  <VideoOff className="w-6 h-6 text-white" />
-                </div>
-              )}
+              <Button variant="outline" size="sm" onClick={nextQuestion}>
+                Next Question
+              </Button>
             </div>
           </div>
+        </div>
 
-          {/* Shared Screen / Code Editor */}
-          <div className="flex-1 bg-white border-t border-gray-300">
-            <div className="h-full flex flex-col">
-              <div className="bg-gray-100 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <ScreenShare className="w-4 h-4 text-gray-600" />
-                  <span className="text-sm font-medium text-gray-700">Shared Code Editor</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Badge variant="outline" className="text-xs">Python</Badge>
-                  <Button variant="ghost" size="sm" onClick={nextQuestion}>
-                    Next Question
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="flex-1 flex">
-                {/* Question Panel - Now on the left */}
-                <div className="w-96 bg-gray-50 border-r border-gray-200 p-4 overflow-y-auto">
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                      <h3 className="text-lg font-semibold text-gray-900">{question.title}</h3>
-                      <Badge className={getDifficultyColor(question.difficulty)}>
-                        {question.difficulty}
-                      </Badge>
-                    </div>
-                    
-                    <div className="prose prose-sm max-w-none">
-                      <p className="text-gray-700 leading-relaxed">{question.description}</p>
-                      
-                      <div className="mt-4 p-3 bg-white rounded border">
-                        <h4 className="font-medium text-gray-900 mb-2">Example:</h4>
-                        <pre className="text-sm text-gray-700 whitespace-pre-wrap">{question.example}</pre>
-                      </div>
-                    </div>
-
-                    <div className="text-xs text-gray-500">
-                      Question {currentQuestion + 1} of {interviewQuestions.length}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Code Editor - Now takes the remaining space */}
-                <div className="flex-1">
-                  <Textarea
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    placeholder="Write your solution here..."
-                    className="w-full h-full resize-none border-0 rounded-none font-mono text-sm leading-relaxed p-4 focus:ring-0"
-                    style={{ minHeight: '100%' }}
-                  />
-                </div>
-              </div>
+        {/* Code Editor */}
+        <div className="flex-1 flex flex-col bg-white">
+          <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Code className="w-4 h-4 text-gray-600" />
+              <span className="text-sm font-medium text-gray-700">Code Editor</span>
             </div>
+            <Badge variant="outline" className="text-xs">Python</Badge>
+          </div>
+          
+          <div className="flex-1">
+            <Textarea
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="Write your solution here..."
+              className="w-full h-full resize-none border-0 rounded-none font-mono text-sm leading-relaxed p-4 focus:ring-0 bg-white"
+              style={{ minHeight: '100%' }}
+            />
           </div>
         </div>
       </div>
 
-      {/* Compact Meeting Controls */}
-      <div className="bg-gray-800 px-6 py-2">
-        <div className="flex items-center justify-center space-x-3">
-          <Button
-            variant={micEnabled ? "secondary" : "destructive"}
-            size="sm"
-            onClick={() => setMicEnabled(!micEnabled)}
-            className="rounded-full w-10 h-10 p-0"
-          >
-            {micEnabled ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
-          </Button>
+      {/* Floating Meeting Controls */}
+      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
+        <div className="bg-gray-800 rounded-full px-6 py-3 shadow-lg">
+          <div className="flex items-center space-x-3">
+            <Button
+              variant={micEnabled ? "secondary" : "destructive"}
+              size="sm"
+              onClick={() => setMicEnabled(!micEnabled)}
+              className="rounded-full w-10 h-10 p-0"
+            >
+              {micEnabled ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
+            </Button>
 
-          <Button
-            variant={videoEnabled ? "secondary" : "destructive"}
-            size="sm"
-            onClick={() => setVideoEnabled(!videoEnabled)}
-            className="rounded-full w-10 h-10 p-0"
-          >
-            {videoEnabled ? <Video className="w-4 h-4" /> : <VideoOff className="w-4 h-4" />}
-          </Button>
+            <Button
+              variant={videoEnabled ? "secondary" : "destructive"}
+              size="sm"
+              onClick={() => setVideoEnabled(!videoEnabled)}
+              className="rounded-full w-10 h-10 p-0"
+            >
+              {videoEnabled ? <Video className="w-4 h-4" /> : <VideoOff className="w-4 h-4" />}
+            </Button>
 
-          <Button
-            variant={screenSharing ? "default" : "secondary"}
-            size="sm"
-            onClick={() => setScreenSharing(!screenSharing)}
-            className="rounded-full w-10 h-10 p-0"
-          >
-            <ScreenShare className="w-4 h-4" />
-          </Button>
+            <Button
+              variant={screenSharing ? "default" : "secondary"}
+              size="sm"
+              onClick={() => setScreenSharing(!screenSharing)}
+              className="rounded-full w-10 h-10 p-0"
+            >
+              <ScreenShare className="w-4 h-4" />
+            </Button>
 
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={endCall}
-            className="rounded-full w-10 h-10 p-0 bg-red-600 hover:bg-red-700"
-          >
-            <PhoneOff className="w-4 h-4" />
-          </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={endCall}
+              className="rounded-full w-10 h-10 p-0 bg-red-600 hover:bg-red-700"
+            >
+              <PhoneOff className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>
