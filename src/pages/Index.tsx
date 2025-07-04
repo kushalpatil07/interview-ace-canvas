@@ -1,9 +1,11 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Mic, MicOff, Video, VideoOff, Phone, PhoneOff, ScreenShare, Code, User, Bot, Settings, MoreVertical } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Mic, MicOff, Video, VideoOff, Phone, PhoneOff, ScreenShare, Code, User, Bot, Settings, MoreVertical, MessageSquare, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 // Sample Google-style interview questions
@@ -31,6 +33,16 @@ const interviewQuestions = [
   },
 ];
 
+// Sample transcript data
+const sampleTranscript = [
+  { speaker: "AI", text: "Hello! Welcome to your technical interview. Let's start with the first coding question.", timestamp: "2:30 PM" },
+  { speaker: "You", text: "Hi there! I'm ready to begin.", timestamp: "2:30 PM" },
+  { speaker: "AI", text: "Great! I've given you a Two Sum problem. Can you walk me through your approach?", timestamp: "2:31 PM" },
+  { speaker: "You", text: "Sure, I think I can solve this using a hash map to store the complements...", timestamp: "2:31 PM" },
+  { speaker: "AI", text: "That sounds like a good approach. What would be the time complexity?", timestamp: "2:32 PM" },
+  { speaker: "You", text: "It should be O(n) time and O(n) space complexity.", timestamp: "2:32 PM" },
+];
+
 const Index = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [code, setCode] = useState("# Write your solution here\n\ndef solution():\n    pass");
@@ -42,6 +54,8 @@ const Index = () => {
   const [micEnabled, setMicEnabled] = useState(true);
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [screenSharing, setScreenSharing] = useState(false);
+  const [showTranscript, setShowTranscript] = useState(false);
+  const [transcript, setTranscript] = useState(sampleTranscript);
 
   const question = interviewQuestions[currentQuestion];
 
@@ -142,8 +156,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Minimal Header with Video Participants */}
-      <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shadow-sm">
+      {/* Minimal Header */}
+      <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shadow-sm h-16">
         <div className="flex items-center space-x-4">
           <h1 className="text-lg font-semibold text-gray-900">Technical Interview</h1>
           <Badge variant="secondary" className="bg-red-100 text-red-800 text-xs">
@@ -152,12 +166,12 @@ const Index = () => {
         </div>
         
         {/* Participant Avatars */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
               aiSpeaking ? 'bg-blue-500 animate-pulse' : 'bg-gray-400'
             }`}>
-              <Bot className={`w-4 h-4 ${aiSpeaking ? 'text-white' : 'text-white'}`} />
+              <Bot className={`w-4 h-4 text-white`} />
             </div>
             <span className="text-sm text-gray-600">AI Interviewer</span>
             {aiSpeaking && (
@@ -173,6 +187,14 @@ const Index = () => {
           </div>
 
           <div className="flex items-center space-x-1">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0"
+              onClick={() => setShowTranscript(!showTranscript)}
+            >
+              <MessageSquare className="w-4 h-4" />
+            </Button>
             <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <Settings className="w-4 h-4" />
             </Button>
@@ -215,6 +237,48 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Transcript Panel - Collapsible */}
+        {showTranscript && (
+          <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+            <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <MessageSquare className="w-4 h-4 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">Transcript</span>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-6 w-6 p-0"
+                onClick={() => setShowTranscript(false)}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+            </div>
+            <ScrollArea className="flex-1 p-4">
+              <div className="space-y-3">
+                {transcript.map((entry, index) => (
+                  <div key={index} className="space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                        entry.speaker === 'AI' ? 'bg-blue-100' : 'bg-green-100'
+                      }`}>
+                        {entry.speaker === 'AI' ? (
+                          <Bot className="w-3 h-3 text-blue-600" />
+                        ) : (
+                          <User className="w-3 h-3 text-green-600" />
+                        )}
+                      </div>
+                      <span className="text-xs font-medium text-gray-700">{entry.speaker}</span>
+                      <span className="text-xs text-gray-500">{entry.timestamp}</span>
+                    </div>
+                    <p className="text-sm text-gray-600 ml-8 leading-relaxed">{entry.text}</p>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        )}
+
         {/* Code Editor */}
         <div className="flex-1 flex flex-col bg-white">
           <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
@@ -222,7 +286,20 @@ const Index = () => {
               <Code className="w-4 h-4 text-gray-600" />
               <span className="text-sm font-medium text-gray-700">Code Editor</span>
             </div>
-            <Badge variant="outline" className="text-xs">Python</Badge>
+            <div className="flex items-center space-x-2">
+              {!showTranscript && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setShowTranscript(true)}
+                  className="text-xs"
+                >
+                  <MessageSquare className="w-3 h-3 mr-1" />
+                  Show Transcript
+                </Button>
+              )}
+              <Badge variant="outline" className="text-xs">Python</Badge>
+            </div>
           </div>
           
           <div className="flex-1">
