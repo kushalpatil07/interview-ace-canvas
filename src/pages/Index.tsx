@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Mic, MicOff, Play, Pause, Code, User, Bot } from "lucide-react";
+import { Mic, MicOff, Video, VideoOff, Phone, PhoneOff, ScreenShare, Code, User, Bot, Settings, MoreVertical } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 // Sample Google-style interview questions
@@ -34,12 +34,15 @@ const interviewQuestions = [
 
 const Index = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [code, setCode] = useState("// Write your solution here\n\n");
+  const [code, setCode] = useState("# Write your solution here\n\ndef solution():\n    pass");
   const [isRecording, setIsRecording] = useState(false);
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [aiSpeaking, setAiSpeaking] = useState(false);
   const [apiKey, setApiKey] = useState("");
   const [showApiInput, setShowApiInput] = useState(true);
+  const [micEnabled, setMicEnabled] = useState(true);
+  const [videoEnabled, setVideoEnabled] = useState(true);
+  const [screenSharing, setScreenSharing] = useState(false);
 
   const question = interviewQuestions[currentQuestion];
 
@@ -61,35 +64,29 @@ const Index = () => {
     setAiSpeaking(true);
     toast({
       title: "AI Interviewer",
-      description: "Hello! I'm your AI interviewer. Let's start with the first coding question.",
+      description: "Hello! Welcome to your technical interview. Let's start with the first coding question.",
     });
     setTimeout(() => setAiSpeaking(false), 3000);
-  };
-
-  const toggleRecording = () => {
-    setIsRecording(!isRecording);
-    if (!isRecording) {
-      toast({
-        title: "Recording Started",
-        description: "I'm listening to your explanation...",
-      });
-    } else {
-      toast({
-        title: "Recording Stopped",
-        description: "Thank you for your explanation.",
-      });
-    }
   };
 
   const nextQuestion = () => {
     if (currentQuestion < interviewQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
-      setCode("// Write your solution here\n\n");
+      setCode("# Write your solution here\n\ndef solution():\n    pass");
       toast({
         title: "Next Question",
         description: "Moving to the next coding challenge.",
       });
     }
+  };
+
+  const endCall = () => {
+    setInterviewStarted(false);
+    setShowApiInput(true);
+    toast({
+      title: "Interview Ended",
+      description: "Thank you for participating in the interview.",
+    });
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -110,7 +107,7 @@ const Index = () => {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">AI Interview Platform</h1>
-            <p className="text-gray-600">Experience Google-style coding interviews with AI</p>
+            <p className="text-gray-600">Join your technical interview session</p>
           </div>
           
           {showApiInput && (
@@ -137,7 +134,7 @@ const Index = () => {
             className="w-full bg-blue-600 hover:bg-blue-700"
             size="lg"
           >
-            Start Interview
+            Join Interview
           </Button>
         </Card>
       </div>
@@ -145,134 +142,163 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Code className="w-5 h-5 text-white" />
-            </div>
-            <h1 className="text-xl font-semibold text-gray-900">AI Interview Session</h1>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Badge variant="outline" className="text-sm">
-              Question {currentQuestion + 1} of {interviewQuestions.length}
-            </Badge>
-            <Button variant="outline" size="sm" onClick={nextQuestion}>
-              Next Question
-            </Button>
-          </div>
+    <div className="min-h-screen bg-gray-900 flex flex-col">
+      {/* Video Call Header */}
+      <header className="bg-gray-800 text-white px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <h1 className="text-lg font-medium">Technical Interview Session</h1>
+          <Badge variant="secondary" className="bg-red-600 text-white">
+            LIVE
+          </Badge>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button variant="ghost" size="sm" className="text-white hover:bg-gray-700">
+            <Settings className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="sm" className="text-white hover:bg-gray-700">
+            <MoreVertical className="w-4 h-4" />
+          </Button>
         </div>
       </header>
 
-      <div className="flex h-[calc(100vh-80px)]">
-        {/* AI Interviewer Panel */}
-        <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col">
-          {/* AI Avatar */}
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex items-center space-x-4">
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                aiSpeaking ? 'bg-blue-600 animate-pulse' : 'bg-gray-200'
-              }`}>
-                <Bot className={`w-6 h-6 ${aiSpeaking ? 'text-white' : 'text-gray-600'}`} />
+      <div className="flex-1 flex">
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Video Grid */}
+          <div className="bg-gray-900 p-4 grid grid-cols-2 gap-4 h-64">
+            {/* AI Interviewer Video */}
+            <div className="relative bg-gray-800 rounded-lg overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className={`w-20 h-20 rounded-full flex items-center justify-center transition-all ${
+                  aiSpeaking ? 'bg-blue-500 animate-pulse' : 'bg-gray-600'
+                }`}>
+                  <Bot className={`w-10 h-10 ${aiSpeaking ? 'text-white' : 'text-gray-300'}`} />
+                </div>
               </div>
-              <div>
-                <h2 className="font-semibold text-gray-900">AI Interviewer</h2>
-                <p className="text-sm text-gray-500">
-                  {aiSpeaking ? 'Speaking...' : 'Ready to help'}
-                </p>
+              <div className="absolute bottom-2 left-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded text-sm">
+                AI Interviewer
               </div>
+              {aiSpeaking && (
+                <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs">
+                  Speaking
+                </div>
+              )}
+            </div>
+
+            {/* Candidate Video */}
+            <div className="relative bg-gray-800 rounded-lg overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center">
+                  <User className="w-10 h-10 text-gray-300" />
+                </div>
+              </div>
+              <div className="absolute bottom-2 left-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded text-sm">
+                You
+              </div>
+              {!videoEnabled && (
+                <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
+                  <VideoOff className="w-8 h-8 text-white" />
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Current Question */}
-          <div className="flex-1 p-6 overflow-y-auto">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <h3 className="text-lg font-semibold text-gray-900">{question.title}</h3>
-                <Badge className={getDifficultyColor(question.difficulty)}>
-                  {question.difficulty}
-                </Badge>
+          {/* Shared Screen / Code Editor */}
+          <div className="flex-1 bg-white border-t border-gray-300">
+            <div className="h-full flex flex-col">
+              <div className="bg-gray-100 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <ScreenShare className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">Shared Code Editor</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Badge variant="outline" className="text-xs">Python</Badge>
+                  <Button variant="ghost" size="sm" onClick={nextQuestion}>
+                    Next Question
+                  </Button>
+                </div>
               </div>
               
-              <div className="prose prose-sm max-w-none">
-                <p className="text-gray-700 leading-relaxed">{question.description}</p>
-                
-                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-900 mb-2">Example:</h4>
-                  <pre className="text-sm text-gray-700 whitespace-pre-wrap">{question.example}</pre>
+              <div className="flex-1 flex">
+                {/* Code Editor */}
+                <div className="flex-1">
+                  <Textarea
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="Write your solution here..."
+                    className="w-full h-full resize-none border-0 rounded-none font-mono text-sm leading-relaxed p-4 focus:ring-0"
+                    style={{ minHeight: '100%' }}
+                  />
+                </div>
+
+                {/* Question Panel */}
+                <div className="w-96 bg-gray-50 border-l border-gray-200 p-4 overflow-y-auto">
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <h3 className="text-lg font-semibold text-gray-900">{question.title}</h3>
+                      <Badge className={getDifficultyColor(question.difficulty)}>
+                        {question.difficulty}
+                      </Badge>
+                    </div>
+                    
+                    <div className="prose prose-sm max-w-none">
+                      <p className="text-gray-700 leading-relaxed">{question.description}</p>
+                      
+                      <div className="mt-4 p-3 bg-white rounded border">
+                        <h4 className="font-medium text-gray-900 mb-2">Example:</h4>
+                        <pre className="text-sm text-gray-700 whitespace-pre-wrap">{question.example}</pre>
+                      </div>
+                    </div>
+
+                    <div className="text-xs text-gray-500">
+                      Question {currentQuestion + 1} of {interviewQuestions.length}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Voice Controls */}
-          <div className="p-6 border-t border-gray-200 bg-gray-50">
-            <div className="space-y-3">
-              <Button
-                onClick={toggleRecording}
-                className={`w-full ${
-                  isRecording 
-                    ? 'bg-red-600 hover:bg-red-700' 
-                    : 'bg-blue-600 hover:bg-blue-700'
-                }`}
-              >
-                {isRecording ? (
-                  <>
-                    <MicOff className="w-4 h-4 mr-2" />
-                    Stop Recording
-                  </>
-                ) : (
-                  <>
-                    <Mic className="w-4 h-4 mr-2" />
-                    Start Recording
-                  </>
-                )}
-              </Button>
-              <p className="text-xs text-gray-500 text-center">
-                Use voice to explain your approach
-              </p>
-            </div>
-          </div>
         </div>
+      </div>
 
-        {/* Coding Canvas */}
-        <div className="flex-1 flex flex-col">
-          <div className="p-4 bg-gray-100 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <h3 className="font-medium text-gray-900">Code Editor</h3>
-              <div className="flex items-center space-x-2">
-                <Badge variant="outline" className="text-xs">JavaScript</Badge>
-                <Button variant="ghost" size="sm">
-                  <Code className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
+      {/* Meeting Controls */}
+      <div className="bg-gray-800 px-6 py-4">
+        <div className="flex items-center justify-center space-x-4">
+          <Button
+            variant={micEnabled ? "secondary" : "destructive"}
+            size="lg"
+            onClick={() => setMicEnabled(!micEnabled)}
+            className="rounded-full w-12 h-12 p-0"
+          >
+            {micEnabled ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
+          </Button>
 
-          <div className="flex-1">
-            <Textarea
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="Write your solution here..."
-              className="w-full h-full resize-none border-0 rounded-none font-mono text-sm leading-relaxed p-6 focus:ring-0"
-              style={{ minHeight: '100%' }}
-            />
-          </div>
+          <Button
+            variant={videoEnabled ? "secondary" : "destructive"}
+            size="lg"
+            onClick={() => setVideoEnabled(!videoEnabled)}
+            className="rounded-full w-12 h-12 p-0"
+          >
+            {videoEnabled ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
+          </Button>
 
-          <div className="p-4 bg-gray-50 border-t border-gray-200">
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-600">
-                Explain your approach while coding
-              </p>
-              <div className="flex items-center space-x-2">
-                <Badge variant="outline" className="text-xs text-green-600">
-                  No execution needed
-                </Badge>
-              </div>
-            </div>
-          </div>
+          <Button
+            variant={screenSharing ? "default" : "secondary"}
+            size="lg"
+            onClick={() => setScreenSharing(!screenSharing)}
+            className="rounded-full w-12 h-12 p-0"
+          >
+            <ScreenShare className="w-5 h-5" />
+          </Button>
+
+          <Button
+            variant="destructive"
+            size="lg"
+            onClick={endCall}
+            className="rounded-full w-12 h-12 p-0 bg-red-600 hover:bg-red-700"
+          >
+            <PhoneOff className="w-5 h-5" />
+          </Button>
         </div>
       </div>
     </div>
