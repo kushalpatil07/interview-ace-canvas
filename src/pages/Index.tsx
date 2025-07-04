@@ -143,20 +143,20 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
-      {/* Video Call Header */}
-      <header className="bg-gray-800 text-white px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <h1 className="text-lg font-medium">Technical Interview Session</h1>
-          <Badge variant="secondary" className="bg-red-600 text-white">
+      {/* Compact Video Call Header */}
+      <header className="bg-gray-800 text-white px-4 py-2 flex items-center justify-between border-b border-gray-700">
+        <div className="flex items-center space-x-3">
+          <h1 className="text-sm font-medium">Technical Interview Session</h1>
+          <Badge variant="secondary" className="bg-red-600 text-white text-xs px-2 py-1">
             LIVE
           </Badge>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="sm" className="text-white hover:bg-gray-700">
-            <Settings className="w-4 h-4" />
+        <div className="flex items-center space-x-1">
+          <Button variant="ghost" size="sm" className="text-white hover:bg-gray-700 h-8 w-8 p-0">
+            <Settings className="w-3 h-3" />
           </Button>
-          <Button variant="ghost" size="sm" className="text-white hover:bg-gray-700">
-            <MoreVertical className="w-4 h-4" />
+          <Button variant="ghost" size="sm" className="text-white hover:bg-gray-700 h-8 w-8 p-0">
+            <MoreVertical className="w-3 h-3" />
           </Button>
         </div>
       </header>
@@ -164,22 +164,22 @@ const Index = () => {
       <div className="flex-1 flex">
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
-          {/* Video Grid */}
-          <div className="bg-gray-900 p-4 grid grid-cols-2 gap-4 h-64">
+          {/* Compact Video Grid */}
+          <div className="bg-gray-900 p-2 grid grid-cols-2 gap-2 h-32">
             {/* AI Interviewer Video */}
             <div className="relative bg-gray-800 rounded-lg overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className={`w-20 h-20 rounded-full flex items-center justify-center transition-all ${
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                   aiSpeaking ? 'bg-blue-500 animate-pulse' : 'bg-gray-600'
                 }`}>
-                  <Bot className={`w-10 h-10 ${aiSpeaking ? 'text-white' : 'text-gray-300'}`} />
+                  <Bot className={`w-6 h-6 ${aiSpeaking ? 'text-white' : 'text-gray-300'}`} />
                 </div>
               </div>
-              <div className="absolute bottom-2 left-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded text-sm">
+              <div className="absolute bottom-1 left-1 bg-black bg-opacity-60 text-white px-1 py-0.5 rounded text-xs">
                 AI Interviewer
               </div>
               {aiSpeaking && (
-                <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs">
+                <div className="absolute top-1 left-1 bg-green-500 text-white px-1 py-0.5 rounded-full text-xs">
                   Speaking
                 </div>
               )}
@@ -188,16 +188,16 @@ const Index = () => {
             {/* Candidate Video */}
             <div className="relative bg-gray-800 rounded-lg overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center">
-                  <User className="w-10 h-10 text-gray-300" />
+                <div className="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center">
+                  <User className="w-6 h-6 text-gray-300" />
                 </div>
               </div>
-              <div className="absolute bottom-2 left-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded text-sm">
+              <div className="absolute bottom-1 left-1 bg-black bg-opacity-60 text-white px-1 py-0.5 rounded text-xs">
                 You
               </div>
               {!videoEnabled && (
                 <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
-                  <VideoOff className="w-8 h-8 text-white" />
+                  <VideoOff className="w-6 h-6 text-white" />
                 </div>
               )}
             </div>
@@ -220,19 +220,8 @@ const Index = () => {
               </div>
               
               <div className="flex-1 flex">
-                {/* Code Editor */}
-                <div className="flex-1">
-                  <Textarea
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    placeholder="Write your solution here..."
-                    className="w-full h-full resize-none border-0 rounded-none font-mono text-sm leading-relaxed p-4 focus:ring-0"
-                    style={{ minHeight: '100%' }}
-                  />
-                </div>
-
-                {/* Question Panel */}
-                <div className="w-96 bg-gray-50 border-l border-gray-200 p-4 overflow-y-auto">
+                {/* Question Panel - Now on the left */}
+                <div className="w-96 bg-gray-50 border-r border-gray-200 p-4 overflow-y-auto">
                   <div className="space-y-4">
                     <div className="flex items-center space-x-2">
                       <h3 className="text-lg font-semibold text-gray-900">{question.title}</h3>
@@ -255,49 +244,60 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* Code Editor - Now takes the remaining space */}
+                <div className="flex-1">
+                  <Textarea
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="Write your solution here..."
+                    className="w-full h-full resize-none border-0 rounded-none font-mono text-sm leading-relaxed p-4 focus:ring-0"
+                    style={{ minHeight: '100%' }}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Meeting Controls */}
-      <div className="bg-gray-800 px-6 py-4">
-        <div className="flex items-center justify-center space-x-4">
+      {/* Compact Meeting Controls */}
+      <div className="bg-gray-800 px-6 py-2">
+        <div className="flex items-center justify-center space-x-3">
           <Button
             variant={micEnabled ? "secondary" : "destructive"}
-            size="lg"
+            size="sm"
             onClick={() => setMicEnabled(!micEnabled)}
-            className="rounded-full w-12 h-12 p-0"
+            className="rounded-full w-10 h-10 p-0"
           >
-            {micEnabled ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
+            {micEnabled ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
           </Button>
 
           <Button
             variant={videoEnabled ? "secondary" : "destructive"}
-            size="lg"
+            size="sm"
             onClick={() => setVideoEnabled(!videoEnabled)}
-            className="rounded-full w-12 h-12 p-0"
+            className="rounded-full w-10 h-10 p-0"
           >
-            {videoEnabled ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
+            {videoEnabled ? <Video className="w-4 h-4" /> : <VideoOff className="w-4 h-4" />}
           </Button>
 
           <Button
             variant={screenSharing ? "default" : "secondary"}
-            size="lg"
+            size="sm"
             onClick={() => setScreenSharing(!screenSharing)}
-            className="rounded-full w-12 h-12 p-0"
+            className="rounded-full w-10 h-10 p-0"
           >
-            <ScreenShare className="w-5 h-5" />
+            <ScreenShare className="w-4 h-4" />
           </Button>
 
           <Button
             variant="destructive"
-            size="lg"
+            size="sm"
             onClick={endCall}
-            className="rounded-full w-12 h-12 p-0 bg-red-600 hover:bg-red-700"
+            className="rounded-full w-10 h-10 p-0 bg-red-600 hover:bg-red-700"
           >
-            <PhoneOff className="w-5 h-5" />
+            <PhoneOff className="w-4 h-4" />
           </Button>
         </div>
       </div>
