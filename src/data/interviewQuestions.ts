@@ -9,23 +9,9 @@ export interface Question {
 export const interviewQuestions: Question[] = [
   {
     id: 1,
-    title: "Two Sum",
-    difficulty: "Easy",
-    description: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-    example: "Input: nums = [2,7,11,15], target = 9\nOutput: [0,1]\nExplanation: Because nums[0] + nums[1] == 9, we return [0, 1].",
-  },
-  {
-    id: 2,
-    title: "Valid Parentheses",
-    difficulty: "Easy",
-    description: "Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.",
-    example: "Input: s = '()'\nOutput: true\n\nInput: s = '([)]'\nOutput: false",
-  },
-  {
-    id: 3,
-    title: "Binary Tree Level Order Traversal",
+    title: "Longest Common Subsequence",
     difficulty: "Medium",
-    description: "Given the root of a binary tree, return the level order traversal of its nodes' values.",
-    example: "Input: root = [3,9,20,null,null,15,7]\nOutput: [[3],[9,20],[15,7]]",
+    description: "Given two strings text1 and text2, return the length of their longest common subsequence. A subsequence of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.",
+    example: "Input: text1 = 'abcde', text2 = 'ace'\nOutput: 3\nExplanation: The longest common subsequence is 'ace' and its length is 3.\n\nInput: text1 = 'abc', text2 = 'abc'\nOutput: 3\nExplanation: The longest common subsequence is 'abc' and its length is 3.\n\nInput: text1 = 'abc', text2 = 'def'\nOutput: 0\nExplanation: There is no such common subsequence, so the result is 0.",
   },
 ]; 

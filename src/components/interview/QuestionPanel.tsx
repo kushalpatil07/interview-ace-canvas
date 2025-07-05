@@ -32,7 +32,7 @@ export const QuestionPanel = ({
   onNextQuestion 
 }: QuestionPanelProps) => {
   return (
-    <div className="w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto">
+    <div className="w-96 bg-white border-r border-gray-200 p-6 overflow-y-auto">
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
           <h3 className="text-xl font-semibold text-gray-900">{question.title}</h3>
@@ -54,9 +54,10 @@ export const QuestionPanel = ({
           <div className="text-sm text-gray-500">
             Question {currentQuestion + 1} of {totalQuestions}
           </div>
-          <Button variant="outline" size="sm" onClick={onNextQuestion}>
+          {/* Next Question button hidden for now */}
+          {/* <Button variant="outline" size="sm" onClick={onNextQuestion}>
             Next Question
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>
