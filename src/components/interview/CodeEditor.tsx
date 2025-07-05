@@ -1,8 +1,8 @@
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
 import { Code } from "lucide-react";
 import { LanguageSelector } from "./LanguageSelector";
 import { CodeLanguage } from "@/data/codeLanguages";
+import Editor from "@monaco-editor/react";
 
 interface CodeEditorProps {
   code: string;
@@ -12,6 +12,23 @@ interface CodeEditorProps {
   languages: CodeLanguage[];
 }
 
+// Map our language IDs to Monaco language IDs
+const getMonacoLanguage = (languageId: string): string => {
+  const languageMap: { [key: string]: string } = {
+    python: "python",
+    javascript: "javascript",
+    typescript: "typescript",
+    java: "java",
+    cpp: "cpp",
+    csharp: "csharp",
+    go: "go",
+    rust: "rust",
+    swift: "swift",
+    kotlin: "kotlin",
+  };
+  return languageMap[languageId] || "python";
+};
+
 export const CodeEditor = ({ 
   code, 
   onCodeChange,
@@ -20,6 +37,10 @@ export const CodeEditor = ({
   languages
 }: CodeEditorProps) => {
   const currentLanguage = languages.find(lang => lang.id === selectedLanguage);
+
+  const handleEditorChange = (value: string | undefined) => {
+    onCodeChange(value || "");
+  };
 
   return (
     <div className="flex-1 flex flex-col bg-white">
@@ -41,12 +62,43 @@ export const CodeEditor = ({
       </div>
       
       <div className="flex-1">
-        <Textarea
+        <Editor
+          height="100%"
+          defaultLanguage="python"
+          language={getMonacoLanguage(selectedLanguage)}
           value={code}
-          onChange={(e) => onCodeChange(e.target.value)}
-          placeholder="Write your solution here..."
-          className="w-full h-full resize-none border-0 rounded-none font-mono text-sm leading-relaxed p-4 focus:ring-0 bg-white"
-          style={{ minHeight: '100%' }}
+          onChange={handleEditorChange}
+          theme="vs-light"
+          options={{
+            minimap: { enabled: false },
+            fontSize: 14,
+            lineNumbers: "on",
+            roundedSelection: false,
+            scrollBeyondLastLine: false,
+            readOnly: false,
+            automaticLayout: true,
+            wordWrap: "on",
+            tabSize: 4,
+            insertSpaces: true,
+            detectIndentation: true,
+            trimAutoWhitespace: true,
+            largeFileOptimizations: false,
+            suggestOnTriggerCharacters: true,
+            acceptSuggestionOnEnter: "on",
+            tabCompletion: "on",
+            wordBasedSuggestions: "allDocuments",
+            parameterHints: {
+              enabled: true,
+            },
+            hover: {
+              enabled: true,
+            },
+            contextmenu: true,
+            quickSuggestions: true,
+            suggest: {
+              insertMode: "replace",
+            },
+          }}
         />
       </div>
     </div>
