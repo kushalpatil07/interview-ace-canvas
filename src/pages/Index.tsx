@@ -13,6 +13,7 @@ const Index = () => {
     // State
     currentQuestion,
     code,
+    selectedLanguage,
     interviewStarted,
     aiSpeaking,
     apiKey,
@@ -23,10 +24,12 @@ const Index = () => {
     transcript,
     question,
     totalQuestions,
+    languages,
     
     // Actions
     setApiKey,
     setCode,
+    onLanguageChange,
     startInterview,
     nextQuestion,
     endCall,
@@ -64,6 +67,9 @@ const Index = () => {
         <CodeEditor
           code={code}
           onCodeChange={setCode}
+          selectedLanguage={selectedLanguage}
+          onLanguageChange={onLanguageChange}
+          languages={languages}
         />
 
         <ParticipantsPanel

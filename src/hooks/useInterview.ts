@@ -2,10 +2,12 @@ import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { interviewQuestions } from "@/data/interviewQuestions";
 import { sampleTranscript, TranscriptEntry } from "@/data/sampleTranscript";
+import { codeLanguages, CodeLanguage } from "@/data/codeLanguages";
 
 export const useInterview = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [code, setCode] = useState("# Write your solution here\n\ndef solution():\n    pass");
+  const [selectedLanguage, setSelectedLanguage] = useState("python");
+  const [code, setCode] = useState(codeLanguages[0].defaultCode);
   const [isRecording, setIsRecording] = useState(false);
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [aiSpeaking, setAiSpeaking] = useState(false);
@@ -14,10 +16,22 @@ export const useInterview = () => {
   const [micEnabled, setMicEnabled] = useState(true);
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [screenSharing, setScreenSharing] = useState(false);
-  const [showTranscript, setShowTranscript] = useState(true);
+  const [showTranscript, setShowTranscript] = useState(false);
   const [transcript, setTranscript] = useState<TranscriptEntry[]>(sampleTranscript);
 
   const question = interviewQuestions[currentQuestion];
+
+  const handleLanguageChange = (languageId: string) => {
+    const newLanguage = codeLanguages.find(lang => lang.id === languageId);
+    if (newLanguage) {
+      setSelectedLanguage(languageId);
+      setCode(newLanguage.defaultCode);
+      toast({
+        title: "Language Changed",
+        description: `Switched to ${newLanguage.name}`,
+      });
+    }
+  };
 
   const startInterview = () => {
     if (!apiKey.trim()) {
@@ -45,7 +59,8 @@ export const useInterview = () => {
   const nextQuestion = () => {
     if (currentQuestion < interviewQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
-      setCode("# Write your solution here\n\ndef solution():\n    pass");
+      const currentLang = codeLanguages.find(lang => lang.id === selectedLanguage);
+      setCode(currentLang?.defaultCode || codeLanguages[0].defaultCode);
       toast({
         title: "Next Question",
         description: "Moving to the next coding challenge.",
@@ -71,6 +86,7 @@ export const useInterview = () => {
     // State
     currentQuestion,
     code,
+    selectedLanguage,
     isRecording,
     interviewStarted,
     aiSpeaking,
@@ -83,10 +99,12 @@ export const useInterview = () => {
     transcript,
     question,
     totalQuestions: interviewQuestions.length,
+    languages: codeLanguages,
     
     // Actions
     setApiKey,
     setCode,
+    onLanguageChange: handleLanguageChange,
     startInterview,
     nextQuestion,
     endCall,

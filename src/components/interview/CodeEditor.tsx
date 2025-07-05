@@ -1,16 +1,26 @@
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Code } from "lucide-react";
+import { LanguageSelector } from "./LanguageSelector";
+import { CodeLanguage } from "@/data/codeLanguages";
 
 interface CodeEditorProps {
   code: string;
   onCodeChange: (code: string) => void;
+  selectedLanguage: string;
+  onLanguageChange: (languageId: string) => void;
+  languages: CodeLanguage[];
 }
 
 export const CodeEditor = ({ 
   code, 
-  onCodeChange
+  onCodeChange,
+  selectedLanguage,
+  onLanguageChange,
+  languages
 }: CodeEditorProps) => {
+  const currentLanguage = languages.find(lang => lang.id === selectedLanguage);
+
   return (
     <div className="flex-1 flex flex-col bg-white">
       <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
@@ -19,7 +29,14 @@ export const CodeEditor = ({
           <span className="text-sm font-medium text-gray-700">Code Editor</span>
         </div>
         <div className="flex items-center space-x-2">
-          <Badge variant="outline" className="text-xs">Python</Badge>
+          <LanguageSelector
+            selectedLanguage={selectedLanguage}
+            onLanguageChange={onLanguageChange}
+            languages={languages}
+          />
+          <Badge variant="outline" className="text-xs">
+            {currentLanguage?.extension || ".py"}
+          </Badge>
         </div>
       </div>
       
