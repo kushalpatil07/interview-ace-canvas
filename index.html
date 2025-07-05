@@ -24,6 +24,73 @@
       name="twitter:image"
       content="https://lovable.dev/opengraph-image-p98pqg.png"
     />
+
+    <!-- ElevenLabs Convai Widget Script -->
+    <script
+      src="https://unpkg.com/@elevenlabs/convai-widget-embed"
+      async
+      type="text/javascript"
+    ></script>
+
+    <!-- Global Convai Client Tools Setup -->
+    <script>
+      // Global variables to store callback functions
+      window.convaiCallbacks = {
+        onCandidateScore: null,
+        getCandidateCode: null,
+      };
+
+      // Function to set up client tools
+      function setupConvaiClientTools() {
+        const widget = document.querySelector("elevenlabs-convai");
+        if (widget) {
+          // Listen for the widget's "call" event to trigger client-side tools
+          widget.addEventListener("elevenlabs-convai:call", (event) => {
+            event.detail.config.clientTools = {
+              // Custom tools for candidate score and code
+              candidate_score: ({ score, feedback }) => {
+                console.log("Candidate score received:", { score, feedback });
+                if (window.convaiCallbacks.onCandidateScore) {
+                  window.convaiCallbacks.onCandidateScore({ score, feedback });
+                }
+                return {
+                  status: "success",
+                  scoreProcessed: score,
+                  feedbackProcessed: feedback,
+                };
+              },
+              candidate_code: () => {
+                console.log("Fetching candidate code");
+                if (window.convaiCallbacks.getCandidateCode) {
+                  const codeData = window.convaiCallbacks.getCandidateCode();
+                  console.log("Code data:", codeData);
+                  return {
+                    status: "success",
+                    codeExecuted: true,
+                    code: codeData.code,
+                    language: codeData.language,
+                    question: codeData.question,
+                    timestamp: codeData.timestamp,
+                  };
+                }
+                return { status: "error", message: "No code available" };
+              },
+            };
+          });
+        }
+      }
+
+      // Set up when DOM is ready
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", setupConvaiClientTools);
+      } else {
+        setupConvaiClientTools();
+      }
+
+      // Also try to set up after a delay to ensure widget is loaded
+      setTimeout(setupConvaiClientTools, 1000);
+      setTimeout(setupConvaiClientTools, 3000);
+    </script>
   </head>
 
   <body>

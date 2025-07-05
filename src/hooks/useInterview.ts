@@ -4,6 +4,11 @@ import { interviewQuestions } from "@/data/interviewQuestions";
 import { sampleTranscript, TranscriptEntry } from "@/data/sampleTranscript";
 import { codeLanguages, CodeLanguage } from "@/data/codeLanguages";
 
+interface CandidateScorePayload {
+  score: number;
+  feedback: string;
+}
+
 export const useInterview = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedLanguage, setSelectedLanguage] = useState("python");
@@ -17,6 +22,8 @@ export const useInterview = () => {
   const [screenSharing, setScreenSharing] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
   const [transcript, setTranscript] = useState<TranscriptEntry[]>(sampleTranscript);
+  const [candidateScore, setCandidateScore] = useState<CandidateScorePayload | null>(null);
+  const [showScore, setShowScore] = useState(false);
 
   const question = interviewQuestions[currentQuestion];
 
@@ -35,7 +42,7 @@ export const useInterview = () => {
   const startInterview = () => {
     setInterviewStarted(true);
     setShowApiInput(false);
-    simulateAiGreeting();
+    // simulateAiGreeting();
   };
 
   const simulateAiGreeting = () => {
@@ -73,6 +80,29 @@ export const useInterview = () => {
   const toggleScreenShare = () => setScreenSharing(!screenSharing);
   const toggleTranscript = () => setShowTranscript(!showTranscript);
 
+  // New functions for Convai integration
+  const handleCandidateScore = (scorePayload: CandidateScorePayload) => {
+    setCandidateScore(scorePayload);
+    setShowScore(true);
+    toast({
+      title: "Score Received",
+      description: `Your score: ${scorePayload.score}/10`,
+    });
+  };
+
+  const getCandidateCode = () => {
+    return {
+      code,
+      language: selectedLanguage,
+      question: question.title,
+      timestamp: new Date().toISOString(),
+    };
+  };
+
+  const hideScore = () => {
+    setShowScore(false);
+  };
+
   return {
     // State
     currentQuestion,
@@ -90,6 +120,8 @@ export const useInterview = () => {
     question,
     totalQuestions: interviewQuestions.length,
     languages: codeLanguages,
+    candidateScore,
+    showScore,
     
     // Actions
     setCode,
@@ -101,5 +133,8 @@ export const useInterview = () => {
     toggleVideo,
     toggleScreenShare,
     toggleTranscript,
+    handleCandidateScore,
+    getCandidateCode,
+    hideScore,
   };
 }; 

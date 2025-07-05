@@ -1,7 +1,11 @@
 export { InterviewWelcome } from './InterviewWelcome';
 export { InterviewHeader } from './InterviewHeader';
 export { QuestionPanel } from './QuestionPanel';
-export { ParticipantsPanel } from './ParticipantsPanel';
 export { CodeEditor } from './CodeEditor';
+export { default as ConvaiWidget } from './ConvaiWidget';
 export { MeetingControls } from './MeetingControls';
-export { LanguageSelector } from './LanguageSelector'; 
+export { ParticipantsPanel } from './ParticipantsPanel';
+export { TranscriptPanel } from './TranscriptPanel';
+export { LanguageSelector } from './LanguageSelector';
+export { ScoreDisplay } from './ScoreDisplay';
+export { ConvaiTestPanel } from './ConvaiTestPanel'; 
