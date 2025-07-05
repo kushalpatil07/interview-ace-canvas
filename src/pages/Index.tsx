@@ -2,7 +2,7 @@ import {
   InterviewWelcome,
   InterviewHeader,
   QuestionPanel,
-  TranscriptPanel,
+  ParticipantsPanel,
   CodeEditor,
   MeetingControls,
 } from "@/components/interview";
@@ -49,7 +49,6 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <InterviewHeader
-        aiSpeaking={aiSpeaking}
         onToggleTranscript={toggleTranscript}
       />
 
@@ -62,16 +61,14 @@ const Index = () => {
           onNextQuestion={nextQuestion}
         />
 
-        {showTranscript && (
-          <TranscriptPanel
-            transcript={transcript}
-            onClose={() => toggleTranscript()}
-          />
-        )}
-
         <CodeEditor
           code={code}
           onCodeChange={setCode}
+        />
+
+        <ParticipantsPanel
+          aiSpeaking={aiSpeaking}
+          transcript={transcript}
           showTranscript={showTranscript}
           onToggleTranscript={toggleTranscript}
         />

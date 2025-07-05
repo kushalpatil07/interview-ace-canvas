@@ -1,20 +1,15 @@
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Code, MessageSquare } from "lucide-react";
+import { Code } from "lucide-react";
 
 interface CodeEditorProps {
   code: string;
   onCodeChange: (code: string) => void;
-  showTranscript: boolean;
-  onToggleTranscript: () => void;
 }
 
 export const CodeEditor = ({ 
   code, 
-  onCodeChange, 
-  showTranscript, 
-  onToggleTranscript 
+  onCodeChange
 }: CodeEditorProps) => {
   return (
     <div className="flex-1 flex flex-col bg-white">
@@ -24,17 +19,6 @@ export const CodeEditor = ({
           <span className="text-sm font-medium text-gray-700">Code Editor</span>
         </div>
         <div className="flex items-center space-x-2">
-          {!showTranscript && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={onToggleTranscript}
-              className="text-xs"
-            >
-              <MessageSquare className="w-3 h-3 mr-1" />
-              Show Transcript
-            </Button>
-          )}
           <Badge variant="outline" className="text-xs">Python</Badge>
         </div>
       </div>

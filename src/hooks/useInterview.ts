@@ -14,7 +14,7 @@ export const useInterview = () => {
   const [micEnabled, setMicEnabled] = useState(true);
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [screenSharing, setScreenSharing] = useState(false);
-  const [showTranscript, setShowTranscript] = useState(false);
+  const [showTranscript, setShowTranscript] = useState(true);
   const [transcript, setTranscript] = useState<TranscriptEntry[]>(sampleTranscript);
 
   const question = interviewQuestions[currentQuestion];
