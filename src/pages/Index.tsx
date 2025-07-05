@@ -16,7 +16,6 @@ const Index = () => {
     selectedLanguage,
     interviewStarted,
     aiSpeaking,
-    apiKey,
     micEnabled,
     videoEnabled,
     screenSharing,
@@ -27,7 +26,6 @@ const Index = () => {
     languages,
     
     // Actions
-    setApiKey,
     setCode,
     onLanguageChange,
     startInterview,
@@ -42,8 +40,6 @@ const Index = () => {
   if (!interviewStarted) {
     return (
       <InterviewWelcome
-        apiKey={apiKey}
-        onApiKeyChange={setApiKey}
         onStartInterview={startInterview}
       />
     );

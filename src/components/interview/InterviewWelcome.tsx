@@ -1,15 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Code } from "lucide-react";
+import { CheckCircle, Code } from "lucide-react";
 
 interface InterviewWelcomeProps {
-  apiKey: string;
-  onApiKeyChange: (key: string) => void;
   onStartInterview: () => void;
 }
 
-export const InterviewWelcome = ({ apiKey, onApiKeyChange, onStartInterview }: InterviewWelcomeProps) => {
+const instructions = [
+  "Ensure your microphone is working properly",
+  "Find a quiet place to interview",
+  "Have a stable internet connection",
+  "Think out loud during problem solving",
+];
+
+export const InterviewWelcome = ({onStartInterview }: InterviewWelcomeProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-md p-8 text-center space-y-6">
@@ -20,24 +25,26 @@ export const InterviewWelcome = ({ apiKey, onApiKeyChange, onStartInterview }: I
           <h1 className="text-2xl font-bold text-gray-900 mb-2">AI Interview Platform</h1>
           <p className="text-gray-600">Join your technical interview session</p>
         </div>
-        
-        <div className="space-y-4">
-          <div className="text-left">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              ElevenLabs API Key
-            </label>
-            <Textarea
-              placeholder="Enter your ElevenLabs API key for voice features..."
-              value={apiKey}
-              onChange={(e) => onApiKeyChange(e.target.value)}
-              className="w-full"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              You'll need an ElevenLabs API key for the AI voice interviewer feature.
-            </p>
+      
+        {/* Instructions */}
+        <div className="rounded -lg border bg-blue-50 p-6 mb-6">
+          <div className="flex items-center mb-2">
+            <CheckCircle className="w-4 h-4 text-blue-600 mr-2" />
+            <span className="mr-2 text-blue-600">
+              Before we start:
+            </span>
+          </div>
+          <div className="space-y-2">
+            {instructions.map((instruction, index) => (
+              <div className="flex items-start" key={index}>
+                <CheckCircle className="w-4 h-4 text-blue-600 mr-2" />
+                <span className="text-sm text-gray-600">{instruction}</span>
+              </div>
+            ))}
           </div>
         </div>
 
+        {/* Start Interview Button */}
         <Button 
           onClick={onStartInterview} 
           className="w-full bg-blue-600 hover:bg-blue-700"

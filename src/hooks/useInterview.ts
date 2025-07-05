@@ -11,7 +11,6 @@ export const useInterview = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [aiSpeaking, setAiSpeaking] = useState(false);
-  const [apiKey, setApiKey] = useState("");
   const [showApiInput, setShowApiInput] = useState(true);
   const [micEnabled, setMicEnabled] = useState(true);
   const [videoEnabled, setVideoEnabled] = useState(true);
@@ -34,14 +33,6 @@ export const useInterview = () => {
   };
 
   const startInterview = () => {
-    if (!apiKey.trim()) {
-      toast({
-        title: "API Key Required",
-        description: "Please enter your ElevenLabs API key to start the interview",
-        variant: "destructive",
-      });
-      return;
-    }
     setInterviewStarted(true);
     setShowApiInput(false);
     simulateAiGreeting();
@@ -90,7 +81,6 @@ export const useInterview = () => {
     isRecording,
     interviewStarted,
     aiSpeaking,
-    apiKey,
     showApiInput,
     micEnabled,
     videoEnabled,
@@ -102,7 +92,6 @@ export const useInterview = () => {
     languages: codeLanguages,
     
     // Actions
-    setApiKey,
     setCode,
     onLanguageChange: handleLanguageChange,
     startInterview,
